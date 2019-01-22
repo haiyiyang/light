@@ -1,0 +1,17 @@
+envNames=INT,QA
+
+[INT]
+gitRepoURL=
+gitLocalDir=
+gitUserName=
+gitPassword=
+
+
+[QA]
+gitRepoURL=
+gitLocalDir=
+gitUserName=
+gitPassword=
+
+
+

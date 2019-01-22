@@ -1,0 +1,3 @@
+appName=server
+scanPackages=org.haiyiyang.server
+#configurationClasses=

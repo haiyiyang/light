@@ -18,8 +18,8 @@ public class Client {
 
 	public static void main(String[] args) {
 		System.setProperty("useLocalProps", LightConstants.STR1);
-		UserService UserService = LightServiceFactory.getService(UserService.class);
-		String helloResult = UserService.hello("Agent");
+		UserService userService = LightServiceFactory.getService(UserService.class);
+		String helloResult = userService.hello("Agent");
 		LOGGER.info("helloResult >>> " + helloResult);
 
 		final UserService asyncUserService = LightServiceFactory.getAsyncService(UserService.class);
@@ -28,7 +28,7 @@ public class Client {
 				return asyncUserService.welcome("San", "Zhang");
 			}
 		});
-		String welcomeResult = UserService.welcome("Jack", "Ma");
+		String welcomeResult = userService.welcome("Jack", "Ma");
 		LOGGER.info("welcomeResult >>> " + welcomeResult);
 		try {
 			String asyncWelcomeResult = welcomeFuture.get();

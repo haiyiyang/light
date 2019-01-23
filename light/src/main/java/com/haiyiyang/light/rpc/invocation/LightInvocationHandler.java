@@ -89,6 +89,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 			group = LightContext.getLightAppMeta().getZeroOneGrouping();
 		}
 
+		// TODO implements recursion
 		ServiceEntry serviceEntry = ServerResolver.getServer(invocationFactor.getClazz().getName(), group);
 		if (serviceEntry == null) {
 			throw new LightException(LightException.Code.SERVICE_ERROR, LightException.SERVICE_NOT_FOUND);

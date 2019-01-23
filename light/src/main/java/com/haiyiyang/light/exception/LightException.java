@@ -5,7 +5,7 @@ public class LightException extends RuntimeException {
 	private static final long serialVersionUID = -1L;
 
 	public static enum Code {
-		UNDEFINED(), SERVICE_ERROR(), ZK_ERROR(), SETTINGS_ERROR(), PERMISSION_ERROR();
+		UNDEFINED(), SETTINGS_ERROR(), PERMISSION_ERROR(), ZK_ERROR(), SERVICE_ERROR(), INVOKE_ERROR();
 	}
 
 	private final Code code;
@@ -15,6 +15,11 @@ public class LightException extends RuntimeException {
 	public LightException(Throwable cause) {
 		super(cause);
 		this.code = Code.UNDEFINED;
+	}
+
+	public LightException(Code code, Throwable cause) {
+		super(cause);
+		this.code = code;
 	}
 
 	public LightException(String message) {

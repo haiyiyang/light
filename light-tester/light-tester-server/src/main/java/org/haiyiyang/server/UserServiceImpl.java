@@ -20,11 +20,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public String welcome(String firstName, String lastName) {
+		String abc = "123";
 		try {
-			Thread.sleep(5*1000);
+			Thread.sleep(5 * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		abc.substring(5, 10);
 		return "welcome >>> " + firstName + " " + lastName;
 	}
 

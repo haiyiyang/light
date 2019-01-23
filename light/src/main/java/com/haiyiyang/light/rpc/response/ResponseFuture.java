@@ -10,11 +10,17 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.haiyiyang.light.constant.LightConstants;
+import com.haiyiyang.light.exception.LightException;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.serialization.SerializerFactory;
 
 public class ResponseFuture<V> implements Future<V> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFuture.class);
 
 	private final Lock lock = new ReentrantLock();
 	private final Condition condition = lock.newCondition();
@@ -95,18 +101,17 @@ public class ResponseFuture<V> implements Future<V> {
 	private Object getResult() {
 		if (packet != null) {
 			List<ByteBuffer> buffer = packet.getData();
-			if (buffer == null || buffer.size() == 0) {
-				// TODO
-			}
 			ByteBuffer bf0 = buffer.get(0);
-			ByteBuffer result = null;
 			if (buffer.size() > 1) {
-				result = buffer.get(1);
-			}
-			if (bf0.get() == LightConstants.BYTE0) {
-				// TODO
-			} else {
-				return SerializerFactory.getSerializer(packet.getSerializerType()).deserialize(result, classType);
+				if (LightConstants.BYTE1 == bf0.get()) {
+					return SerializerFactory.getSerializer(packet.getSerializerType()).deserialize(buffer.get(1),
+							classType);
+				} else {
+					LightException ex = (LightException) SerializerFactory.getSerializer(packet.getSerializerType())
+							.deserialize(buffer.get(1), LightException.class);
+					LOGGER.error(ex.toString());
+					throw ex;
+				}
 			}
 		}
 		return null;

@@ -32,7 +32,7 @@ public class ServiceEntry {
 	public ServiceEntry(LightAppMeta lightAppMeta, String serviceName) {
 		this.ipPort = new IpPort(lightAppMeta.getMachineIp(), lightAppMeta.getAppPort());
 		this.group = lightAppMeta.getZeroOneGrouping();
-		this.weight = lightAppMeta.getLightProps().getServerLoadWeight();
+		this.weight = lightAppMeta.getLightConf().getServerLoadWeight();
 		this.serviceNames.add(serviceName);
 	}
 

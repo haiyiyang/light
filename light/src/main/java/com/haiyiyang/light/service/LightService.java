@@ -17,17 +17,17 @@ import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.context.LightContext;
 import com.haiyiyang.light.exception.LightException;
 import com.haiyiyang.light.meta.LightAppMeta;
+import com.haiyiyang.light.resource.publish.ResourcePublication;
+import com.haiyiyang.light.resource.publish.ResourcePublisher;
+import com.haiyiyang.light.resource.subscription.ResourceSubscriber;
+import com.haiyiyang.light.resource.subscription.ResourceSubscription;
 import com.haiyiyang.light.rpc.invocation.InvocationFactor;
 import com.haiyiyang.light.rpc.invocation.LightInvocationHandler;
 import com.haiyiyang.light.rpc.server.LightRpcServer;
 import com.haiyiyang.light.rpc.server.task.handler.RequestHandler;
 import com.haiyiyang.light.service.entry.ServiceEntry;
-import com.haiyiyang.light.service.publish.LightPublication;
-import com.haiyiyang.light.service.publish.LightPublisher;
-import com.haiyiyang.light.service.subscription.LightSubscriber;
-import com.haiyiyang.light.service.subscription.LightSubscription;
 
-public class LightService implements LightPublisher, LightSubscriber {
+public class LightService implements ResourcePublisher, ResourceSubscriber {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LightService.class);
 
@@ -70,7 +70,7 @@ public class LightService implements LightPublisher, LightSubscriber {
 			Entry<String, LightService> entry;
 			for (Iterator<Entry<String, LightService>> ite = PUBLISHED_SERVICES.entrySet().iterator(); ite.hasNext();) {
 				entry = ite.next();
-				LightPublication.getPublish(entry.getValue()).publishService(entry.getValue().getPath(),
+				ResourcePublication.getPublish(entry.getValue()).publishService(entry.getValue().getPath(),
 						entry.getValue().getPublishedData());
 			}
 		}
@@ -82,7 +82,7 @@ public class LightService implements LightPublisher, LightSubscriber {
 			Entry<String, LightService> entry;
 			for (Iterator<Entry<String, LightService>> ite = PUBLISHED_SERVICES.entrySet().iterator(); ite.hasNext();) {
 				entry = ite.next();
-				LightPublication.getPublish(entry.getValue()).unpublishService(entry.getValue().getPath());
+				ResourcePublication.getPublish(entry.getValue()).unpublishService(entry.getValue().getPath());
 			}
 		}
 		LOGGER.info("Unpublished Light services.");
@@ -90,7 +90,7 @@ public class LightService implements LightPublisher, LightSubscriber {
 
 	public static void publishLightService(Collection<Object> objects) {
 		LightAppMeta lightAppMeta = LightContext.getLightAppMeta();
-		String publishRegistry = lightAppMeta.getLightProps().getRegistry();
+		String publishRegistry = lightAppMeta.getLightConf().getRegistry();
 		for (Object object : objects) {
 			String interfaceName = getInterfaceName(object);
 			LOCAL_SERVICE.put(interfaceName, object);
@@ -112,7 +112,7 @@ public class LightService implements LightPublisher, LightSubscriber {
 	}
 
 	public List<ServiceEntry> doSubscribeLightService() {
-		List<byte[]> dataList = LightSubscription.getSubscription(this).getChildrenData(this.path);
+		List<byte[]> dataList = ResourceSubscription.getSubscription(this).getChildrenData(this.path);
 		if (dataList != null && !dataList.isEmpty()) {
 			List<ServiceEntry> serviceEntryList = new ArrayList<>(dataList.size());
 			for (byte[] data : dataList) {
@@ -130,7 +130,7 @@ public class LightService implements LightPublisher, LightSubscriber {
 		if (lightService != null) {
 			return lightService.getSubscribedData();
 		}
-		String registry = lightAppMeta.getLightProps().getPublishRegistry(appName);
+		String registry = lightAppMeta.getLightConf().getPublishRegistry(appName);
 		lightService = new LightService(registry, getSubscriptionPath(appName));
 		SUBSCRIBED_SERVICES.put(appName, lightService);
 		return lightService.doSubscribeLightService();

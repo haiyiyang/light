@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.context.LightContext;
-import com.haiyiyang.light.meta.props.LightProps;
+import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.protocol.codec.ProtocolDecoder;
 import com.haiyiyang.light.protocol.codec.ProtocolEncoder;
@@ -80,10 +80,10 @@ public class LightRpcClient {
 	}
 
 	public Object sendMessage(ProtocolPacket packet, Object classType, Channel channel) throws Exception {
-		LightProps lightProps = LightContext.getLightAppMeta().getLightProps();
+		LightConf lightConf = LightContext.getLightAppMeta().getLightConf();
 		if (packet.getInvokeMode() != LightConstants.BYTE0) {
 			LightRpcContext.setResponseFuture(packet.getPacketId(),
-					new ResponseFuture<Object>(classType, lightProps.getTimeout(), TimeUnit.MILLISECONDS));
+					new ResponseFuture<Object>(classType, lightConf.getTimeout(), TimeUnit.MILLISECONDS));
 		}
 		writeChannel(packet, channel);
 		if (packet.getInvokeMode() == LightConstants.BYTE1) {

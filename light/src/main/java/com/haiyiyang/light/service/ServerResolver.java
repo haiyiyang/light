@@ -13,7 +13,7 @@ import com.haiyiyang.light.context.LightContext;
 import com.haiyiyang.light.meta.LightAppMeta;
 import com.haiyiyang.light.rpc.server.IpPort;
 import com.haiyiyang.light.service.entry.ServiceEntry;
-import com.haiyiyang.light.utils.LightUtils;
+import com.haiyiyang.light.utils.LightUtil;
 
 public class ServerResolver {
 
@@ -22,10 +22,10 @@ public class ServerResolver {
 	private static Map<String, ServiceEntry> LATEST_SERVICE_ENTRY = new ConcurrentHashMap<>();
 
 	public static ServiceEntry getServer(String serviceName, Byte group) {
-		if (LightUtils.useLocalProps()) {
+		if (LightUtil.useLocalConf()) {
 			LightAppMeta lightAppMeta = LightContext.getLightAppMeta();
 			String appName = lightAppMeta.resolveServicePath(serviceName);
-			IpPort designatedIpPort = lightAppMeta.getLightProps().getDesignatedIpPort(appName);
+			IpPort designatedIpPort = lightAppMeta.getLightConf().getDesignatedIpPort(appName);
 			if (designatedIpPort != null) {
 				LOGGER.info("Designated IpPort was found, service name [{}], {}.", serviceName, designatedIpPort);
 				return new ServiceEntry(designatedIpPort);

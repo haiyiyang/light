@@ -17,7 +17,7 @@ public class LightConstants {
 	public static final String STR0 = "0", STR1 = "1", STR2 = "2", STR3 = "3";
 
 	public static final String UTF8 = "UTF-8";
-	public static final String DOT_PROPS = ".props";
+	public static final String DOT_CONF = ".conf";
 	public static final String LOCAL_IP = "127.0.0.1";
 	public static final char FS_CHAR = File.separatorChar;
 	public static final String LOCAL_UNDERLINE_IP = "127_0_0_1";

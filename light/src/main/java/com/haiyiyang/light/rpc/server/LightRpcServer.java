@@ -50,7 +50,7 @@ public class LightRpcServer {
 							ch.pipeline().addLast("decoder", new ProtocolDecoder())
 									.addLast("encoder", new ProtocolEncoder()).addLast(
 											new DefaultEventExecutorGroup(
-													lightAppMeta.getLightProps().getServerThreadQuantity()),
+													lightAppMeta.getLightConf().getServerThreadQuantity()),
 											new ServerInboundHandler());
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -58,7 +58,7 @@ public class LightRpcServer {
 			int serverPort = lightAppMeta.getAppPort();
 			ChannelFuture channelFuture = serverBootstrap.bind(serverIp, serverPort);
 
-			channelFuture.awaitUninterruptibly(lightAppMeta.getLightProps().getTimeout(), TimeUnit.SECONDS);
+			channelFuture.awaitUninterruptibly(lightAppMeta.getLightConf().getTimeout(), TimeUnit.SECONDS);
 			if (channelFuture.isSuccess()) {
 				LOGGER.info("Server was completed successfully.");
 			}

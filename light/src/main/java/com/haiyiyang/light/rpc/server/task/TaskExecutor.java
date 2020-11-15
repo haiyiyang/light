@@ -5,7 +5,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.haiyiyang.light.meta.props.LightProps;
+import com.haiyiyang.light.meta.conf.LightConf;
 
 public class TaskExecutor {
 
@@ -13,18 +13,18 @@ public class TaskExecutor {
 
 	private static volatile TaskExecutor TASK_EXECUTOR;
 
-	private TaskExecutor(LightProps lightProps) {
-		threadPool = new ThreadPoolExecutor(lightProps.getMinThread(), lightProps.getMaxThread(), 60, TimeUnit.SECONDS,
+	private TaskExecutor(LightConf lightConf) {
+		threadPool = new ThreadPoolExecutor(lightConf.getMinThread(), lightConf.getMaxThread(), 60, TimeUnit.SECONDS,
 				new SynchronousQueue<Runnable>(), new ThreadPoolExecutor.AbortPolicy());
 	}
 
-	public static TaskExecutor SINGLETON(LightProps lightProps) {
+	public static TaskExecutor singleton(LightConf lightConf) {
 		if (TASK_EXECUTOR != null) {
 			return TASK_EXECUTOR;
 		}
 		synchronized (TaskExecutor.class) {
 			if (TASK_EXECUTOR == null) {
-				TASK_EXECUTOR = new TaskExecutor(lightProps);
+				TASK_EXECUTOR = new TaskExecutor(lightConf);
 			}
 		}
 		return TASK_EXECUTOR;

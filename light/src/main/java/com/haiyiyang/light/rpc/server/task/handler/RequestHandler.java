@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.haiyiyang.light.context.LightContext;
-import com.haiyiyang.light.meta.props.LightProps;
+import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.rpc.server.task.TaskExecutor;
 import com.haiyiyang.light.rpc.server.task.TaskQueue;
@@ -13,13 +13,13 @@ public class RequestHandler extends Thread {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
 
-	private LightProps lightProps;
+	private LightConf lightConf;
 
 	private static RequestHandler requestHandler;
 
 	private RequestHandler() {
 		this.setName("Request Handler Thread.");
-		this.lightProps = LightContext.getLightAppMeta().getLightProps();
+		this.lightConf = LightContext.getLightAppMeta().getLightConf();
 		LOGGER.info("Starting request handler [RequestHandler] thread.");
 	}
 
@@ -54,8 +54,8 @@ public class RequestHandler extends Thread {
 		if (protocolPacket == null) {
 			return result;
 		}
-		if ((System.currentTimeMillis() - protocolPacket.getStartTime()) < lightProps.getTimeout()) {
-			return TaskExecutor.SINGLETON(lightProps).execute(new ResponseHandler(protocolPacket));
+		if ((System.currentTimeMillis() - protocolPacket.getStartTime()) < lightConf.getTimeout()) {
+			return TaskExecutor.singleton(lightConf).execute(new ResponseHandler(protocolPacket));
 		} else {
 			if (protocolPacket != null) {
 				// TODO

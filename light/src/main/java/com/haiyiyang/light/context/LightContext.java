@@ -9,7 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.haiyiyang.light.app.ShutdownHook;
-import com.haiyiyang.light.app.props.SettingsProps;
+import com.haiyiyang.light.app.conf.SettingsConf;
 import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.exception.LightException;
 import com.haiyiyang.light.meta.LightAppMeta;
@@ -22,7 +22,7 @@ public class LightContext extends AnnotationConfigApplicationContext {
 
 	private LightAppMeta lightAppMeta;
 
-	private SettingsProps settingsProps;
+	private SettingsConf settingsConf;
 
 	private static volatile LightContext LIGHT_CONTEXT;
 
@@ -52,8 +52,8 @@ public class LightContext extends AnnotationConfigApplicationContext {
 
 	private void initialize(AbstractApplicationContext ctx) {
 		try {
-			settingsProps = SettingsProps.SINGLETON();
-			lightAppMeta = LightAppMeta.SINGLETON(settingsProps.getAppName());
+			settingsConf = SettingsConf.singleton();
+			lightAppMeta = LightAppMeta.SINGLETON(settingsConf.getAppName());
 			Map<String, Object> objectMap;
 			if (ctx != null) {
 				this.refresh();
@@ -62,32 +62,32 @@ public class LightContext extends AnnotationConfigApplicationContext {
 				loadCompontents();
 				objectMap = this.getBeansWithAnnotation(IAmALightService.class);
 			}
-			if (!lightAppMeta.getLightProps().isDisablePublish()) {
+			if (!lightAppMeta.getLightConf().isDisablePublish()) {
 				if (objectMap != null && !objectMap.isEmpty()) {
 					LightService.publishLightService(objectMap.values());
 				}
 			}
 		} catch (IOException e) {
-			LOGGER.info("Initialization configuration[SettingsProps] failed.");
+			LOGGER.info("Initialization configuration[SettingsConf] failed.");
 			throw new LightException(e);
 		}
 	}
 
 	private void loadCompontents() {
 		try {
-			String scanPackages = settingsProps.getScanPackages();
+			String scanPackages = settingsConf.getScanPackages();
 			if (scanPackages != null && !scanPackages.isEmpty()) {
 				this.scan(scanPackages.split(LightConstants.COMMA));
 				LOGGER.info("Scanned packages: {}.", scanPackages);
 			}
-			Class<?>[] classes = settingsProps.getConfigurableClasses();
+			Class<?>[] classes = settingsConf.getConfigurableClasses();
 			if (classes != null && classes.length > 0) {
 				this.register(classes);
-				LOGGER.info("Registered packages: {}.", settingsProps.getAnnotatedClasses());
+				LOGGER.info("Registered packages: {}.", settingsConf.getAnnotatedClasses());
 			}
 			this.refresh();
 		} catch (ClassNotFoundException e) {
-			LOGGER.info("Registered annotatedClasses in configuration[SettingsProps] failed.");
+			LOGGER.info("Registered annotatedClasses in configuration[SettingsConf] failed.");
 			throw new LightException(e);
 		}
 	}

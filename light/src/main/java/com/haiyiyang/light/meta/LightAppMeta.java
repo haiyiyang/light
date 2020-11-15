@@ -9,23 +9,23 @@ import org.springframework.util.Assert;
 
 import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.exception.LightException;
-import com.haiyiyang.light.meta.props.AppProps;
-import com.haiyiyang.light.meta.props.LightProps;
-import com.haiyiyang.light.meta.props.PortProps;
-import com.haiyiyang.light.meta.props.ResourceProps;
+import com.haiyiyang.light.meta.conf.AppConf;
+import com.haiyiyang.light.meta.conf.LightConf;
+import com.haiyiyang.light.meta.conf.PortConf;
+import com.haiyiyang.light.meta.conf.SharedConf;
 import com.haiyiyang.light.rpc.server.LightConfig;
 import com.haiyiyang.light.utils.NetworkUtils;
 
 public class LightAppMeta {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightAppMeta.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightAppMeta.class);
 
 	private String appName;
 	private String configRegistry;
-	private LightProps lightProps;
-	private PortProps portProps;
-	private AppProps appProps;
-	private ResourceProps resourceProps;
+	private LightConf lightConf;
+	private PortConf portConf;
+	private AppConf appConf;
+	private SharedConf resourceConf;
 
 	private byte zeroOneGrouping;
 	private String appNameDotUnderlineIP;
@@ -38,12 +38,12 @@ public class LightAppMeta {
 	private LightAppMeta(String appName) throws LightException {
 		this.appName = appName;
 		this.configRegistry = LightConfig.getConfigRegistry();
-		this.lightProps = LightProps.SINGLETON(this);
-		this.portProps = PortProps.SINGLETON(this);
-		this.appProps = AppProps.SINGLETON(this);
-		ResourceProps.publishResourceProps(appProps.getResources());
+		this.lightConf = LightConf.singleton(this);
+		this.portConf = PortConf.singleton(this);
+		this.appConf = AppConf.singleton(this);
+		SharedConf.subscribeShared(appConf.getShared());
 		this.setMachineIPAndZeroOneGrouping();
-		LOGGER.info("Initialized LightAppMeta.");
+		LR.info("Initialized LightAppMeta.");
 	}
 
 	public static LightAppMeta SINGLETON(String appName) {
@@ -60,7 +60,7 @@ public class LightAppMeta {
 
 	private void setMachineIPAndZeroOneGrouping() {
 		Set<String> ips = NetworkUtils.getLocalIps();
-		String ipSegmentPrefix = lightProps.getIpSegmentPrefix();
+		String ipSegmentPrefix = lightConf.getIpSegmentPrefix();
 		for (String ip : ips) {
 			if (ipSegmentPrefix == null || ip.startsWith(ipSegmentPrefix)) {
 				machineIP = ip;
@@ -79,7 +79,7 @@ public class LightAppMeta {
 	}
 
 	public String resolveServicePath(String serviceName) {
-		List<String> domainPackageList = lightProps.getDomainPackages();
+		List<String> domainPackageList = lightConf.getDomainPackages();
 		if (!domainPackageList.isEmpty()) {
 			for (String domainPackage : domainPackageList) {
 				if (serviceName.indexOf(domainPackage) == 0) {
@@ -93,7 +93,7 @@ public class LightAppMeta {
 	}
 
 	public String getMatchedDomainPackage(String serviceName) {
-		List<String> domainPackageList = lightProps.getDomainPackages();
+		List<String> domainPackageList = lightConf.getDomainPackages();
 		if (!domainPackageList.isEmpty()) {
 			for (String domainPackage : domainPackageList) {
 				if (serviceName.indexOf(domainPackage) == 0) {
@@ -105,23 +105,23 @@ public class LightAppMeta {
 	}
 
 	public int getAppPort() {
-		return portProps.getAppPort();
+		return portConf.getAppPort();
 	}
 
-	public LightProps getLightProps() {
-		return lightProps;
+	public LightConf getLightConf() {
+		return lightConf;
 	}
 
-	public PortProps getPortProps() {
-		return portProps;
+	public PortConf getPortConf() {
+		return portConf;
 	}
 
-	public AppProps getAppProps() {
-		return appProps;
+	public AppConf getAppConf() {
+		return appConf;
 	}
 
-	public ResourceProps getResourceProps() {
-		return resourceProps;
+	public SharedConf getResourceConf() {
+		return resourceConf;
 	}
 
 	public String getAppName() {

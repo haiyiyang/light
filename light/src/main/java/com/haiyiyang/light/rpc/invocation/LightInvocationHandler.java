@@ -17,7 +17,7 @@ import org.springframework.cglib.proxy.MethodProxy;
 
 import com.haiyiyang.light.context.LightContext;
 import com.haiyiyang.light.exception.LightException;
-import com.haiyiyang.light.meta.props.LightProps;
+import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.PacketIdGenerator;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.rpc.client.LightRpcClient;
@@ -46,7 +46,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 	private LightInvocationHandler(InvocationFactor factor) {
 		this.invocationFactor = factor;
 		this.client = new LightRpcClient();
-		this.proxyMode = ProxyMode.valueOf(getLightProps().getProxyType());
+		this.proxyMode = ProxyMode.valueOf(getLightConf().getProxyType());
 		if (ProxyMode.CGLIB == this.proxyMode) {
 			Enhancer en = new Enhancer();
 			en.setSuperclass(factor.getClazz());
@@ -58,8 +58,8 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 		}
 	}
 
-	private static LightProps getLightProps() {
-		return LightContext.getLightAppMeta().getLightProps();
+	private static LightConf getLightConf() {
+		return LightContext.getLightAppMeta().getLightConf();
 	}
 
 	public static Object getProxyService(InvocationFactor factor) {
@@ -85,7 +85,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 		}
 		LOGGER.info("Prepare to start calling method [{}].", method.getName());
 		Byte group = null;
-		if (getLightProps().isOpenGroup()) {
+		if (getLightConf().isOpenGroup()) {
 			group = LightContext.getLightAppMeta().getZeroOneGrouping();
 		}
 
@@ -104,7 +104,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 			}
 		}
 
-		SerializerMode serializerType = SerializerMode.valueOf(getLightProps().getSerializer());
+		SerializerMode serializerType = SerializerMode.valueOf(getLightConf().getSerializer());
 
 		RequestMeta message = new RequestMeta();
 		String requestId = RequestUtil.getThreadLocalUUID();

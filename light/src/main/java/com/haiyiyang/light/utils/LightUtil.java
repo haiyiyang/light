@@ -5,7 +5,7 @@ import com.haiyiyang.light.constant.LightConstants;
 public class LightUtil {
 
 	public static boolean useLocalConf() {
-		return LightConstants.STR1.equals(System.getProperty("useLocalProps"));
+		return LightConstants.STR1.equals(System.getProperty("useLocalConf"));
 	}
 
 	public static String getLocalPath(String path) {

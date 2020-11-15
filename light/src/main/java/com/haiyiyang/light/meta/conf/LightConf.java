@@ -48,7 +48,7 @@ public class LightConf implements ResourceSubscriber {
 	private static final byte DEFAULT_SERVER_LOAD_WEIGHT = 3;
 	private static final String SERVER_LOAD_WEIGHT = "serverLoadWeight";
 
-	private static final String LIGHT_CONF_URL = "/light/light.props";
+	private static final String LIGHT_CONF_URL = "/light/light.conf";
 	private static final String LIGHT_CONF_LOCAL_URL = LightUtil.getLocalPath(LIGHT_CONF_URL);
 
 	private static volatile LightConf LIGHT_CONF;

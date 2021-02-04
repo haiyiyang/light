@@ -6,6 +6,6 @@ public class Server {
 
 	public static void main(String[] args) {
 		System.setProperty("useLocalProps", "1");
-		LightContext.getContext().start();
+		LightContext.buildContext("server", new String[] { "org.haiyiyang" }).start();
 	}
 }

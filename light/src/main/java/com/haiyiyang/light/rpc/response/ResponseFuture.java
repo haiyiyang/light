@@ -20,7 +20,7 @@ import com.haiyiyang.light.serialization.SerializerFactory;
 
 public class ResponseFuture<V> implements Future<V> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFuture.class);
+	private static final Logger LR = LoggerFactory.getLogger(ResponseFuture.class);
 
 	private final Lock lock = new ReentrantLock();
 	private final Condition condition = lock.newCondition();
@@ -109,7 +109,7 @@ public class ResponseFuture<V> implements Future<V> {
 				} else {
 					LightException ex = (LightException) SerializerFactory.getSerializer(packet.getSerializerType())
 							.deserialize(buffer.get(1), LightException.class);
-					LOGGER.error(ex.toString());
+					LR.error(ex.toString());
 					throw ex;
 				}
 			}

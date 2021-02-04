@@ -10,7 +10,7 @@ import com.haiyiyang.light.protocol.ProtocolPacket;
 
 public class TaskQueue {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TaskQueue.class);
+	private static final Logger LR = LoggerFactory.getLogger(TaskQueue.class);
 
 	private static volatile TaskQueue TASK_QUEUE = new TaskQueue();
 
@@ -32,7 +32,7 @@ public class TaskQueue {
 		try {
 			return BLOCKING_QUEUE.take();
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getMessage());
+			LR.error(e.getMessage());
 		}
 		return null;
 	}

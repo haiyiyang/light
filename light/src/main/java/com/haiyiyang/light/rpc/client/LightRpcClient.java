@@ -8,9 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.haiyiyang.light.conf.LightConf;
 import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.context.LightContext;
-import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.protocol.codec.ProtocolDecoder;
 import com.haiyiyang.light.protocol.codec.ProtocolEncoder;
@@ -31,7 +31,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class LightRpcClient {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightRpcClient.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightRpcClient.class);
 
 	private ClientInboundHandler clentInboundHandler;
 	private static Map<IpPort, Channel> CHANNELS = new ConcurrentHashMap<>();
@@ -63,14 +63,14 @@ public class LightRpcClient {
 						}
 					});
 			ChannelFuture channelFuture = b.connect(ipPort.getIp(), ipPort.getPort());
-			LOGGER.info("Connectting to Netty server, {}", ipPort);
+			LR.info("Connectting to Netty server, {}", ipPort);
 			channelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS); // TODO
 			if (channelFuture.isSuccess()) {
 				CHANNELS.put(ipPort, channelFuture.channel());
 				EVENT_LOOP_GROUPS.put(ipPort, group);
-				LOGGER.info("Connected to Netty server successfully, {}", ipPort);
+				LR.info("Connected to Netty server successfully, {}", ipPort);
 			} else {
-				LOGGER.info("Connected to Netty server failed, {}", ipPort);
+				LR.info("Connected to Netty server failed, {}", ipPort);
 				throw new Exception();
 			}
 		} finally {

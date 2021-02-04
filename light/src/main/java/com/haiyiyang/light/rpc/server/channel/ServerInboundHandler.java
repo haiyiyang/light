@@ -13,11 +13,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Sharable
 public class ServerInboundHandler extends SimpleChannelInboundHandler<ProtocolPacket> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServerInboundHandler.class);
+	private static final Logger LR = LoggerFactory.getLogger(ServerInboundHandler.class);
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ProtocolPacket msg) throws Exception {
-		LOGGER.info("Received a protocol packet, packetId: {}.", msg.getPacketId());
+		LR.info("Received a protocol packet, packetId: {}.", msg.getPacketId());
 		msg.setChContext(ctx);
 		TaskQueue.SINGLETON().add(msg);
 	}

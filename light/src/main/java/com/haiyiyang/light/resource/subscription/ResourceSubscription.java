@@ -15,7 +15,7 @@ import com.haiyiyang.light.registry.RegistryConnection;
 
 public class ResourceSubscription extends RegistryConnection {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceSubscription.class);
+	private static final Logger LR = LoggerFactory.getLogger(ResourceSubscription.class);
 
 	private ResourceSubscriber lightSubscriber;
 	private static final Map<ResourceSubscriber, ResourceSubscription> SUBSCRIPTIONS = Maps.newConcurrentMap();
@@ -61,7 +61,7 @@ public class ResourceSubscription extends RegistryConnection {
 
 	@Override
 	public void doProcess(boolean sessionExpired, WatchedEvent event) {
-		LOGGER.info("Received [WatchedEvent], sessionExpired: {}, event: {}.", sessionExpired, event);
+		LR.info("Received [WatchedEvent], sessionExpired: {}, event: {}.", sessionExpired, event);
 		lightSubscriber.subscribe();
 	}
 

@@ -9,7 +9,7 @@ import org.springframework.util.ClassUtils;
 
 public class LightClassUtils {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightClassUtils.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightClassUtils.class);
 
 	// TODO change to Guava cache.
 	private static final Map<String, Class<?>> userServiceClassMap = new HashMap<>(32);
@@ -22,7 +22,7 @@ public class LightClassUtils {
 			userServiceClassMap.put(name, ClassUtils.forName(name, null));
 			return userServiceClassMap.get(name);
 		} catch (ClassNotFoundException | LinkageError e) {
-			LOGGER.error(e.getMessage());
+			LR.error(e.getMessage());
 			return null;
 		}
 	}

@@ -18,9 +18,11 @@ public class LightConstants {
 
 	public static final String UTF8 = "UTF-8";
 	public static final String DOT_CONF = ".conf";
+	public static final String DEFAULT = "default";
 	public static final String LOCAL_IP = "127.0.0.1";
 	public static final char FS_CHAR = File.separatorChar;
 	public static final String LOCAL_UNDERLINE_IP = "127_0_0_1";
+	public static final String ZK_DEFAULT_ADDRESS = "127.0.0.1:2181";
 	public static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
 	public static final String USER_HOME = System.getProperty("user.home");
 

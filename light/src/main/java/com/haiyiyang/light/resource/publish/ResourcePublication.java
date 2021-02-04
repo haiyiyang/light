@@ -11,7 +11,7 @@ import com.haiyiyang.light.registry.RegistryConnection;
 import com.haiyiyang.light.service.LightService;
 
 public class ResourcePublication extends RegistryConnection {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourcePublication.class);
+	private static final Logger LR = LoggerFactory.getLogger(ResourcePublication.class);
 
 	private ResourcePublisher lightPublisher;
 	private static final Map<ResourcePublisher, ResourcePublication> PUBLICATIONS = Maps.newConcurrentMap();
@@ -46,7 +46,7 @@ public class ResourcePublication extends RegistryConnection {
 
 	@Override
 	public void doProcess(boolean sessionExpired, WatchedEvent event) {
-		LOGGER.info("Received [WatchedEvent], sessionExpired: {}, event: {}.", sessionExpired, event);
+		LR.info("Received [WatchedEvent], sessionExpired: {}, event: {}.", sessionExpired, event);
 		LightService.doPublishLightService();
 	}
 

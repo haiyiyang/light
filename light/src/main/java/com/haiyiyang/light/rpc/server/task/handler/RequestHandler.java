@@ -3,15 +3,15 @@ package com.haiyiyang.light.rpc.server.task.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.haiyiyang.light.conf.LightConf;
 import com.haiyiyang.light.context.LightContext;
-import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.rpc.server.task.TaskExecutor;
 import com.haiyiyang.light.rpc.server.task.TaskQueue;
 
 public class RequestHandler extends Thread {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
+	private static final Logger LR = LoggerFactory.getLogger(RequestHandler.class);
 
 	private LightConf lightConf;
 
@@ -20,7 +20,7 @@ public class RequestHandler extends Thread {
 	private RequestHandler() {
 		this.setName("Request Handler Thread.");
 		this.lightConf = LightContext.getLightAppMeta().getLightConf();
-		LOGGER.info("Starting request handler [RequestHandler] thread.");
+		LR.info("Starting request handler [RequestHandler] thread.");
 	}
 
 	public synchronized static void handle() {
@@ -39,7 +39,7 @@ public class RequestHandler extends Thread {
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
-					LOGGER.warn("InterruptedException: {}", e.getMessage());
+					LR.warn("InterruptedException: {}", e.getMessage());
 				}
 				threadPoolIsExecute = execute(protocolPacket);
 			} else {

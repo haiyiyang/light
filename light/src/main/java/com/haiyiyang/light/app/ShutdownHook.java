@@ -9,7 +9,7 @@ import com.haiyiyang.light.service.LightService;
 
 public class ShutdownHook extends Thread {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownHook.class);
+	private static final Logger LR = LoggerFactory.getLogger(ShutdownHook.class);
 
 	private ShutdownHook() {
 	}
@@ -24,18 +24,18 @@ public class ShutdownHook extends Thread {
 
 	public void run() {
 		try {
-			LOGGER.info("The App start shutting down.");
+			LR.info("The App start shutting down.");
 			LightService.doUnpublishLightService();
-			LOGGER.info("THe thread sleeps 30 secondes.");
+			LR.info("THe thread sleeps 30 secondes.");
 			Thread.sleep(30 * 1000);
 			LightRpcServer.SINGLETON().stop();
-			LOGGER.info("The netty server has been shut down.");
+			LR.info("The netty server has been shut down.");
 		} catch (Throwable e) {
-			LOGGER.error("The Light App shut down failed, exception: {}", e.getMessage());
+			LR.error("The Light App shut down failed, exception: {}", e.getMessage());
 		} finally {
 			if (LightContext.getContext() != null) {
 				LightContext.getContext().close();
-				LOGGER.info("The Light Context closed.");
+				LR.info("The Light Context closed.");
 			}
 		}
 	}

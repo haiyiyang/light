@@ -18,7 +18,7 @@ import com.haiyiyang.light.service.annotation.IAmALightService;
 
 public class LightContext extends AnnotationConfigApplicationContext {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightContext.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightContext.class);
 
 	private LightAppMeta lightAppMeta;
 
@@ -47,7 +47,8 @@ public class LightContext extends AnnotationConfigApplicationContext {
 	}
 
 	public static LightAppMeta getLightAppMeta() {
-		return getContext().lightAppMeta;
+		LightContext context = getContext();
+		return context.lightAppMeta;
 	}
 
 	private void initialize(AbstractApplicationContext ctx) {
@@ -62,13 +63,11 @@ public class LightContext extends AnnotationConfigApplicationContext {
 				loadCompontents();
 				objectMap = this.getBeansWithAnnotation(IAmALightService.class);
 			}
-			if (!lightAppMeta.getLightConf().isDisablePublish()) {
-				if (objectMap != null && !objectMap.isEmpty()) {
-					LightService.publishLightService(objectMap.values());
-				}
+			if (objectMap != null && !objectMap.isEmpty()) {
+				LightService.publishLightService(objectMap.values());
 			}
 		} catch (IOException e) {
-			LOGGER.info("Initialization configuration[SettingsConf] failed.");
+			LR.info("Initialization configuration[SettingsConf] failed.");
 			throw new LightException(e);
 		}
 	}
@@ -78,16 +77,16 @@ public class LightContext extends AnnotationConfigApplicationContext {
 			String scanPackages = settingsConf.getScanPackages();
 			if (scanPackages != null && !scanPackages.isEmpty()) {
 				this.scan(scanPackages.split(LightConstants.COMMA));
-				LOGGER.info("Scanned packages: {}.", scanPackages);
+				LR.info("Scanned packages: {}.", scanPackages);
 			}
 			Class<?>[] classes = settingsConf.getConfigurableClasses();
 			if (classes != null && classes.length > 0) {
 				this.register(classes);
-				LOGGER.info("Registered packages: {}.", settingsConf.getAnnotatedClasses());
+				LR.info("Registered packages: {}.", settingsConf.getAnnotatedClasses());
 			}
 			this.refresh();
 		} catch (ClassNotFoundException e) {
-			LOGGER.info("Registered annotatedClasses in configuration[SettingsConf] failed.");
+			LR.info("Registered annotatedClasses in configuration[SettingsConf] failed.");
 			throw new LightException(e);
 		}
 	}

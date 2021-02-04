@@ -1,4 +1,4 @@
-package com.haiyiyang.light.meta.conf;
+package com.haiyiyang.light.conf;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ import com.typesafe.config.ConfigFactory;
 
 public class SharedConf implements ResourceSubscriber {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharedConf.class);
+	private static final Logger LR = LoggerFactory.getLogger(SharedConf.class);
 
 	public static final String SHARED_PATH = "/light/shared/";
 	public static final String SHARED_LOCAL_PATH = LightUtil.getLocalPath(SHARED_PATH);
@@ -58,7 +58,7 @@ public class SharedConf implements ResourceSubscriber {
 	private void doSubscribeSharedConf() {
 		byte[] data = ResourceSubscription.getSubscription(this).getData(this.path);
 		if (data == null || data.length == 0) {
-			LOGGER.error("The file [{}] does not exists, or is empty.", this.path);
+			LR.error("The file [{}] does not exists, or is empty.", this.path);
 			throw new LightException(LightException.FILE_NOT_FOUND_OR_EMPTY);
 		}
 		config = ConfigFactory.parseString(new String(data, LightConstants.CHARSET_UTF8));
@@ -85,6 +85,6 @@ public class SharedConf implements ResourceSubscriber {
 	@Override
 	public void subscribe() {
 		doSubscribeSharedConf();
-		LOGGER.info("Reloaded file [{}].", getPath());
+		LR.info("Reloaded file [{}].", getPath());
 	}
 }

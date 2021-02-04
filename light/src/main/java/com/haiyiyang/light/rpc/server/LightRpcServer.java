@@ -25,7 +25,7 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
 public class LightRpcServer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightRpcServer.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightRpcServer.class);
 
 	private static LightRpcServer LIGHT_RPC_SERVER = new LightRpcServer();
 
@@ -60,10 +60,10 @@ public class LightRpcServer {
 
 			channelFuture.awaitUninterruptibly(lightAppMeta.getLightConf().getTimeout(), TimeUnit.SECONDS);
 			if (channelFuture.isSuccess()) {
-				LOGGER.info("Server was completed successfully.");
+				LR.info("Server was completed successfully.");
 			}
 		} catch (Exception e) {
-			LOGGER.error(LightException.SERVER_STARTUP_FAILED);
+			LR.error(LightException.SERVER_STARTUP_FAILED);
 			LightService.doUnpublishLightService();
 			throw new LightException(LightException.SERVER_STARTUP_FAILED);
 		}

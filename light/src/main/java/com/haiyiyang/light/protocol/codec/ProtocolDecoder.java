@@ -15,7 +15,7 @@ import io.netty.handler.codec.CorruptedFrameException;
 
 public class ProtocolDecoder extends ByteToMessageDecoder {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProtocolDecoder.class);
+	private static final Logger LR = LoggerFactory.getLogger(ProtocolDecoder.class);
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -24,19 +24,19 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 		}
 		in.markReaderIndex();
 		if (in.readByte() != LightConstants.PROTOCOL_MAGIC_NUMBER) {
-			LOGGER.error("Invalid protocol magic number.");
+			LR.error("Invalid protocol magic number.");
 			throw new CorruptedFrameException("Invalid protocol magic number.");
 		}
 		int dataLength = in.readInt();
 		if (in.readableBytes() < dataLength) {
 			in.resetReaderIndex();
-			LOGGER.error("The length of readable bytes is less than specified length.");
+			LR.error("The length of readable bytes is less than specified length.");
 			return;
 		}
 		byte[] data = new byte[dataLength];
 		in.readBytes(data);
 		ProtocolPacket packet = ProtocolPacket.decode(data);
 		out.add(packet);
-		LOGGER.info("Decoded the protocol packet, packetId: {}.", packet.getPacketId());
+		LR.info("Decoded the protocol packet, packetId: {}.", packet.getPacketId());
 	}
 }

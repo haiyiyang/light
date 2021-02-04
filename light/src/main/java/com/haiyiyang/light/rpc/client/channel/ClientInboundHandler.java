@@ -13,7 +13,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 
 public class ClientInboundHandler extends SimpleChannelInboundHandler<ProtocolPacket> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClientInboundHandler.class);
+	private static final Logger LR = LoggerFactory.getLogger(ClientInboundHandler.class);
 
 	private LightRpcClient lightRpcClient;
 
@@ -52,7 +52,7 @@ public class ClientInboundHandler extends SimpleChannelInboundHandler<ProtocolPa
 	protected void channelRead0(ChannelHandlerContext ctx, ProtocolPacket msg) throws Exception {
 		msg.setChContext(ctx);
 		lightRpcClient.receiveMessage(msg);
-		LOGGER.info("Received a protocol packet, packetId: {}.", msg.getPacketId());
+		LR.info("Received a protocol packet, packetId: {}.", msg.getPacketId());
 	}
 
 }

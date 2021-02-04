@@ -17,7 +17,7 @@ import com.haiyiyang.light.utils.LightUtil;
 
 public class ServerResolver {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServerResolver.class);
+	private static final Logger LR = LoggerFactory.getLogger(ServerResolver.class);
 
 	private static Map<String, ServiceEntry> LATEST_SERVICE_ENTRY = new ConcurrentHashMap<>();
 
@@ -27,13 +27,13 @@ public class ServerResolver {
 			String appName = lightAppMeta.resolveServicePath(serviceName);
 			IpPort designatedIpPort = lightAppMeta.getLightConf().getDesignatedIpPort(appName);
 			if (designatedIpPort != null) {
-				LOGGER.info("Designated IpPort was found, service name [{}], {}.", serviceName, designatedIpPort);
+				LR.info("Designated IpPort was found, service name [{}], {}.", serviceName, designatedIpPort);
 				return new ServiceEntry(designatedIpPort);
 			}
 		}
 		List<ServiceEntry> list = LightService.subscribeLightService(serviceName);
 		if (list == null || list.isEmpty()) {
-			LOGGER.error("No ServiceEntry was found, service name [{}].", serviceName);
+			LR.error("No ServiceEntry was found, service name [{}].", serviceName);
 			return null;
 		}
 		List<ServiceEntry> serviceEntryList = new ArrayList<>(list.size());
@@ -44,7 +44,7 @@ public class ServerResolver {
 			}
 		}
 		if (serviceEntryList == null || serviceEntryList.isEmpty()) {
-			LOGGER.error("No ServiceEntry was found for the group [{}], service name [{}].", group, serviceName);
+			LR.error("No ServiceEntry was found for the group [{}], service name [{}].", group, serviceName);
 			return null;
 		}
 		return getNextServiceEntry(serviceName, serviceEntryList);

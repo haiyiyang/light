@@ -29,7 +29,7 @@ import com.haiyiyang.light.service.entry.ServiceEntry;
 
 public class LightService implements ResourcePublisher, ResourceSubscriber {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightService.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightService.class);
 
 	private static final String LIGHT_SERVICE_SLASH_URL = "/light/service/";
 
@@ -74,7 +74,7 @@ public class LightService implements ResourcePublisher, ResourceSubscriber {
 						entry.getValue().getPublishedData());
 			}
 		}
-		LOGGER.info("Published Light services.");
+		LR.info("Published Light services.");
 	}
 
 	public static void doUnpublishLightService() {
@@ -85,7 +85,7 @@ public class LightService implements ResourcePublisher, ResourceSubscriber {
 				ResourcePublication.getPublish(entry.getValue()).unpublishService(entry.getValue().getPath());
 			}
 		}
-		LOGGER.info("Unpublished Light services.");
+		LR.info("Unpublished Light services.");
 	}
 
 	public static void publishLightService(Collection<Object> objects) {
@@ -130,7 +130,7 @@ public class LightService implements ResourcePublisher, ResourceSubscriber {
 		if (lightService != null) {
 			return lightService.getSubscribedData();
 		}
-		String registry = lightAppMeta.getLightConf().getPublishRegistry(appName);
+		String registry = lightAppMeta.getPublishRegistry(appName);
 		lightService = new LightService(registry, getSubscriptionPath(appName));
 		SUBSCRIBED_SERVICES.put(appName, lightService);
 		return lightService.doSubscribeLightService();
@@ -149,7 +149,7 @@ public class LightService implements ResourcePublisher, ResourceSubscriber {
 	private static String getInterfaceName(Object serviceImpl) {
 		Class<?>[] classes = serviceImpl.getClass().getInterfaces();
 		if (classes == null || classes.length == 0) {
-			LOGGER.error("The service Class [{}] must implements an interface.", serviceImpl.getClass().getName());
+			LR.error("The service Class [{}] must implements an interface.", serviceImpl.getClass().getName());
 			throw new LightException("As a service Class must implements an interface.");
 		}
 		if (classes != null && classes.length > 0) {
@@ -160,7 +160,7 @@ public class LightService implements ResourcePublisher, ResourceSubscriber {
 				}
 			}
 		}
-		LOGGER.error("The simple name of the Class [{}] must be prefixed with its interface simple name.",
+		LR.error("The simple name of the Class [{}] must be prefixed with its interface simple name.",
 				serviceImpl.getClass().getName());
 		throw new LightException(
 				"The simple name of an implementation class must be prefixed with its interface simple name.");

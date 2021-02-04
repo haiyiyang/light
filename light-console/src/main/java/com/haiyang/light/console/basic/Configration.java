@@ -19,6 +19,7 @@ public class Configration {
 	BeetlSpringViewResolver getBeetlSpringViewResolver() {
 		BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
 		beetlSpringViewResolver.setContentType(Constants.DEFAULT_CONTENT_TYPE);
+		beetlSpringViewResolver.setPrefix("/WEB-INF/views");
 		return beetlSpringViewResolver;
 	}
 }

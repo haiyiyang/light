@@ -11,13 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
+import com.haiyiyang.light.conf.LightConf;
 import com.haiyiyang.light.context.LightContext;
 import com.haiyiyang.light.exception.LightException;
-import com.haiyiyang.light.meta.conf.LightConf;
 import com.haiyiyang.light.protocol.PacketIdGenerator;
 import com.haiyiyang.light.protocol.ProtocolPacket;
 import com.haiyiyang.light.rpc.client.LightRpcClient;
@@ -26,14 +25,13 @@ import com.haiyiyang.light.serialization.SerializerFactory;
 import com.haiyiyang.light.serialization.SerializerMode;
 import com.haiyiyang.light.service.ServerResolver;
 import com.haiyiyang.light.service.entry.ServiceEntry;
-import com.haiyiyang.light.service.proxy.ProxyMode;
 import com.haiyiyang.light.utils.RequestUtil;
 
 import io.netty.channel.Channel;
 
 public class LightInvocationHandler implements InvocationHandler, MethodInterceptor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightInvocationHandler.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightInvocationHandler.class);
 
 	private static final Map<InvocationFactor, LightInvocationHandler> INVOCATION_HANDLER = new ConcurrentHashMap<>();
 
@@ -41,21 +39,14 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 	private InvocationFactor invocationFactor;
 	private static final String TO_STRING = "toString";
 	private LightRpcClient client;
-	private ProxyMode proxyMode;
 
 	private LightInvocationHandler(InvocationFactor factor) {
 		this.invocationFactor = factor;
 		this.client = new LightRpcClient();
-		this.proxyMode = ProxyMode.valueOf(getLightConf().getProxyType());
-		if (ProxyMode.CGLIB == this.proxyMode) {
-			Enhancer en = new Enhancer();
-			en.setSuperclass(factor.getClazz());
-			en.setCallback(this);
-			this.objectProxy = en.create();
-		} else {
-			this.objectProxy = Proxy.newProxyInstance(LightInvocationHandler.class.getClassLoader(),
-					new Class[] { factor.getClazz() }, this);
-		}
+
+		this.objectProxy = Proxy.newProxyInstance(LightInvocationHandler.class.getClassLoader(),
+				new Class[] { factor.getClazz() }, this);
+
 	}
 
 	private static LightConf getLightConf() {
@@ -83,7 +74,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 		if (TO_STRING.equals(method.getName())) {
 			return proxy.getClass().getName();
 		}
-		LOGGER.info("Prepare to start calling method [{}].", method.getName());
+		LR.info("Prepare to start calling method [{}].", method.getName());
 		Byte group = null;
 		if (getLightConf().isOpenGroup()) {
 			group = LightContext.getLightAppMeta().getZeroOneGrouping();
@@ -99,7 +90,7 @@ public class LightInvocationHandler implements InvocationHandler, MethodIntercep
 			try {
 				channel = client.connect(serviceEntry.getIpPort());
 			} catch (Exception e) {
-				LOGGER.error("Getting Channel failed, IP: {}, port: {}.", serviceEntry.getIpPort().getIp(),
+				LR.error("Getting Channel failed, IP: {}, port: {}.", serviceEntry.getIpPort().getIp(),
 						serviceEntry.getIpPort().getPort());
 			}
 		}

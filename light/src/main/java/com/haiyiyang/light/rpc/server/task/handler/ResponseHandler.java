@@ -18,7 +18,7 @@ import com.haiyiyang.light.service.LightService;
 
 public class ResponseHandler implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHandler.class);
+	private static final Logger LR = LoggerFactory.getLogger(ResponseHandler.class);
 
 	private ProtocolPacket protocolPacket;
 
@@ -46,10 +46,10 @@ public class ResponseHandler implements Runnable {
 				method = service.getClass().getMethod(requestMeta.getMethod(), requestMeta.getParamsTypes());
 			} catch (NoSuchMethodException e) {
 				throwable = e;
-				LOGGER.error("No Such Method [{}].", requestMeta.getMethod());
+				LR.error("No Such Method [{}].", requestMeta.getMethod());
 			} catch (SecurityException e) {
 				throwable = e;
-				LOGGER.error("Calling Method [{}] throws Security Exception.", requestMeta.getMethod());
+				LR.error("Calling Method [{}] throws Security Exception.", requestMeta.getMethod());
 			}
 
 			if (method != null) {
@@ -57,17 +57,17 @@ public class ResponseHandler implements Runnable {
 					response = method.invoke(service, (Object[]) args);
 				} catch (IllegalAccessException e) {
 					throwable = e;
-					LOGGER.error("Calling Method [{}] throws Illegal Access Exception.", requestMeta.getMethod());
+					LR.error("Calling Method [{}] throws Illegal Access Exception.", requestMeta.getMethod());
 				} catch (IllegalArgumentException e) {
 					throwable = e;
-					LOGGER.error("Calling Method [{}] throws Illegal Argument Exception.", requestMeta.getMethod());
+					LR.error("Calling Method [{}] throws Illegal Argument Exception.", requestMeta.getMethod());
 				} catch (InvocationTargetException e) {
 					throwable = e;
-					LOGGER.error("Calling Method [{}] throws Invocation Target Exception.", requestMeta.getMethod());
+					LR.error("Calling Method [{}] throws Invocation Target Exception.", requestMeta.getMethod());
 				}
 			}
 			if (throwable != null) {
-				LOGGER.error(throwable.getMessage());
+				LR.error(throwable.getMessage());
 			}
 			List<ByteBuffer> buffers = new ArrayList<ByteBuffer>();
 			buffers.add(ByteBuffer.allocate(1).put(throwable != null ? LightConstants.BYTE0 : LightConstants.BYTE1));

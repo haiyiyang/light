@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.haiyiyang.light.conf.AppConf;
+import com.haiyiyang.light.conf.LightConf;
+import com.haiyiyang.light.conf.PortConf;
+import com.haiyiyang.light.conf.SharedConf;
 import com.haiyiyang.light.constant.LightConstants;
 import com.haiyiyang.light.exception.LightException;
-import com.haiyiyang.light.meta.conf.AppConf;
-import com.haiyiyang.light.meta.conf.LightConf;
-import com.haiyiyang.light.meta.conf.PortConf;
-import com.haiyiyang.light.meta.conf.SharedConf;
 import com.haiyiyang.light.rpc.server.LightConfig;
 import com.haiyiyang.light.utils.NetworkUtils;
 
@@ -28,10 +28,7 @@ public class LightAppMeta {
 	private SharedConf resourceConf;
 
 	private byte zeroOneGrouping;
-	private String appNameDotUnderlineIP;
-	private String underlineIPDotAppName;
 	private String machineIP = LightConstants.LOCAL_IP;
-	private String machineUnderlineIP = LightConstants.LOCAL_UNDERLINE_IP;
 
 	private static volatile LightAppMeta LIGHT_APP_META;
 
@@ -59,23 +56,20 @@ public class LightAppMeta {
 	}
 
 	private void setMachineIPAndZeroOneGrouping() {
-		Set<String> ips = NetworkUtils.getLocalIps();
-		String ipSegmentPrefix = lightConf.getIpSegmentPrefix();
-		for (String ip : ips) {
-			if (ipSegmentPrefix == null || ip.startsWith(ipSegmentPrefix)) {
-				machineIP = ip;
-				machineUnderlineIP = ip.replace('.', '_');
-				break;
-			}
-		}
-		if (ipSegmentPrefix != null && !machineIP.startsWith(ipSegmentPrefix)) {
-			throw new LightException(LightException.Code.PERMISSION_ERROR, LightException.NO_NETWORK_PERMISSION);
-		}
+		// TODO
+//		Set<String> ips = NetworkUtils.getLocalIps();
+//		String ipSegmentPrefix = lightConf.getIpSegmentPrefix();
+//		for (String ip : ips) {
+//			if (ipSegmentPrefix == null || ip.startsWith(ipSegmentPrefix)) {
+//				machineIP = ip;
+//				machineUnderlineIP = ip.replace('.', '_');
+//				break;
+//			}
+//		}
+//		if (ipSegmentPrefix != null && !machineIP.startsWith(ipSegmentPrefix)) {
+//			throw new LightException(LightException.Code.PERMISSION_ERROR, LightException.NO_NETWORK_PERMISSION);
+//		}
 		zeroOneGrouping = Byte.parseByte(machineIP.substring(machineIP.length() - 1, machineIP.length()));
-		appNameDotUnderlineIP = new StringBuilder(appName).append(LightConstants.DOT).append(machineUnderlineIP)
-				.toString();
-		underlineIPDotAppName = new StringBuilder(machineUnderlineIP).append(LightConstants.DOT).append(appName)
-				.toString();
 	}
 
 	public String resolveServicePath(String serviceName) {
@@ -140,12 +134,9 @@ public class LightAppMeta {
 		return zeroOneGrouping;
 	}
 
-	public String getAppNameDotUnderlineIP() {
-		return appNameDotUnderlineIP;
-	}
-
-	public String getUnderlineIPDotAppName() {
-		return underlineIPDotAppName;
+	public String getPublishRegistry(String appName2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

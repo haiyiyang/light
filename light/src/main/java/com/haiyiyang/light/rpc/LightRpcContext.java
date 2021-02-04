@@ -16,7 +16,7 @@ import com.haiyiyang.light.service.LightService;
 
 public class LightRpcContext {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LightRpcContext.class);
+	private static final Logger LR = LoggerFactory.getLogger(LightRpcContext.class);
 
 	private Integer packetId;
 
@@ -70,7 +70,7 @@ public class LightRpcContext {
 				return getCurrentFuture();
 			}
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LR.error(e.getMessage());
 		}
 		return null;
 	}

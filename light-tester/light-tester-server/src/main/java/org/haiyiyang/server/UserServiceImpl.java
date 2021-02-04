@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
 	public String welcome(String firstName, String lastName) {
 		String abc = "123";
 		try {
-			Thread.sleep(5 * 1000);
+			Thread.sleep(1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		abc.substring(5, 10);
+		abc.substring(1, 2);
 		return "welcome >>> " + firstName + " " + lastName;
 	}
 

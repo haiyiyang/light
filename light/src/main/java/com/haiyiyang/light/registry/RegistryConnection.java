@@ -22,7 +22,7 @@ import com.haiyiyang.light.constant.LightConstants;
 
 public abstract class RegistryConnection implements Watcher {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RegistryConnection.class);
+	private static final Logger LR = LoggerFactory.getLogger(RegistryConnection.class);
 
 	protected String registry = null;
 	protected ZooKeeper zooKeeper = null;
@@ -50,7 +50,7 @@ public abstract class RegistryConnection implements Watcher {
 		if (event.getState() == KeeperState.SyncConnected) {
 			if (countDownLatch != null) {
 				countDownLatch.countDown();
-				LOGGER.info("CountDownLatch has counted down the latch.");
+				LR.info("CountDownLatch has counted down the latch.");
 			}
 			if (event.getPath() != null) {
 				doProcess(false, event);
@@ -58,7 +58,7 @@ public abstract class RegistryConnection implements Watcher {
 		} else if (event.getState() == KeeperState.Expired) {
 			getRegistry();
 			doProcess(true, event);
-			LOGGER.info("KeeperState Expired. zooKeeper: {}", zooKeeper);
+			LR.info("KeeperState Expired. zooKeeper: {}", zooKeeper);
 		}
 	}
 
@@ -88,14 +88,14 @@ public abstract class RegistryConnection implements Watcher {
 			REGISTRIES.put(registry, zooKeeper);
 			countDownLatch = new CountDownLatch(1);
 			boolean flag = countDownLatch.await(SESSION_TIMEOUT, TimeUnit.MILLISECONDS);
-			LOGGER.info("The value of countDownLatch.await: {}.", flag);
-			LOGGER.info("Zookeeper connection {} have been establish.", registry);
+			LR.info("The value of countDownLatch.await: {}.", flag);
+			LR.info("Zookeeper connection {} have been establish.", registry);
 		} catch (IOException e) {
 			countDownLatch.countDown();
-			LOGGER.error("Zookeeper connection {} error: {}.", registry, e.getMessage());
+			LR.error("Zookeeper connection {} error: {}.", registry, e.getMessage());
 		} catch (InterruptedException e) {
 			countDownLatch.countDown();
-			LOGGER.error("Zookeeper connection {} got interrupted exception: {}.", registry, e.getMessage());
+			LR.error("Zookeeper connection {} got interrupted exception: {}.", registry, e.getMessage());
 		}
 	}
 
@@ -103,9 +103,9 @@ public abstract class RegistryConnection implements Watcher {
 		if (zooKeeper != null) {
 			try {
 				zooKeeper.close();
-				LOGGER.info("Closed zookeeper connection.");
+				LR.info("Closed zookeeper connection.");
 			} catch (InterruptedException e) {
-				LOGGER.error("Closed zookeeper connection error.");
+				LR.error("Closed zookeeper connection error.");
 			}
 		}
 	}
@@ -114,11 +114,11 @@ public abstract class RegistryConnection implements Watcher {
 		if (existsPath(path, false) == null) {
 			try {
 				getRegistry().create(path, data, acl, createMode);
-				LOGGER.info("ZookKeeper created the path {}.", path);
+				LR.info("ZookKeeper created the path {}.", path);
 			} catch (KeeperException ke) {
-				LOGGER.error("Execute createPath {} caused KeeperException error : {}", path, ke.getMessage());
+				LR.error("Execute createPath {} caused KeeperException error : {}", path, ke.getMessage());
 			} catch (InterruptedException ie) {
-				LOGGER.error("Execute createPath {} caused InterruptedException error : {}", path, ie.getMessage());
+				LR.error("Execute createPath {} caused InterruptedException error : {}", path, ie.getMessage());
 			}
 		}
 	}
@@ -127,10 +127,10 @@ public abstract class RegistryConnection implements Watcher {
 		try {
 			return getRegistry().exists(path, watch);
 		} catch (KeeperException ke) {
-			LOGGER.error("Execute existsPath caused keeper exception, code : {}", ke.code());
+			LR.error("Execute existsPath caused keeper exception, code : {}", ke.code());
 			return null;
 		} catch (InterruptedException ie) {
-			LOGGER.error("Execute existsPath caused interrupted exception : {}", ie.getMessage());
+			LR.error("Execute existsPath caused interrupted exception : {}", ie.getMessage());
 			return null;
 		}
 	}
@@ -156,9 +156,9 @@ public abstract class RegistryConnection implements Watcher {
 			try {
 				return getRegistry().getData(path, watcher, null);
 			} catch (KeeperException ke) {
-				LOGGER.error("Execute getData caused KeeperException error : {}", ke.getMessage());
+				LR.error("Execute getData caused KeeperException error : {}", ke.getMessage());
 			} catch (InterruptedException ie) {
-				LOGGER.error("Execute getData caused InterruptedException error : {}", ie.getMessage());
+				LR.error("Execute getData caused InterruptedException error : {}", ie.getMessage());
 			}
 		}
 		return null;
@@ -169,9 +169,9 @@ public abstract class RegistryConnection implements Watcher {
 			try {
 				return getRegistry().getChildren(path, watcher);
 			} catch (KeeperException ke) {
-				LOGGER.error("Execute getChildren of path {} caused KeeperException error : {}", path, ke.getMessage());
+				LR.error("Execute getChildren of path {} caused KeeperException error : {}", path, ke.getMessage());
 			} catch (InterruptedException ie) {
-				LOGGER.error("Execute getChildren of path {} caused InterruptedException error : {}", path,
+				LR.error("Execute getChildren of path {} caused InterruptedException error : {}", path,
 						ie.getMessage());
 			}
 		}
@@ -180,17 +180,17 @@ public abstract class RegistryConnection implements Watcher {
 
 	public void deleteServicePath(String fullPath) {
 		if (existsPath(fullPath, false) == null) {
-			LOGGER.info("This path {} does not exists.", fullPath);
+			LR.info("This path {} does not exists.", fullPath);
 			return;
 		}
 		try {
 			getRegistry().delete(fullPath, -1);
-			LOGGER.info("Deleted the path {}.", fullPath);
+			LR.info("Deleted the path {}.", fullPath);
 		} catch (InterruptedException ie) {
-			LOGGER.error("Execute createServicePath of path {} caused InterruptedException error : {}", fullPath,
+			LR.error("Execute createServicePath of path {} caused InterruptedException error : {}", fullPath,
 					ie.getMessage());
 		} catch (KeeperException ke) {
-			LOGGER.error("Execute createServicePath of path {} caused KeeperException error : {}", fullPath,
+			LR.error("Execute createServicePath of path {} caused KeeperException error : {}", fullPath,
 					ke.getMessage());
 		}
 	}
